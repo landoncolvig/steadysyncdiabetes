@@ -542,12 +542,11 @@ svg{display:block}
       <p class="eyebrow">Diabetes, steadied</p>
       <h1>Stay <em>in range</em> without the constant mental math.</h1>
       <p class="hero__sub">One calm app for your glucose, meals, insulin, and the patterns underneath them. Steady brings your Dexcom, your Beta Bionics iLet, and Apple Health together, so you can finally see how your body used your insulin.</p>
-      <form class="waitlist" id="join" action="https://api.web3forms.com/submit" method="POST" novalidate>
-        <input type="hidden" name="access_key" value="73f15c01-7a5a-4b83-b05d-d8efcc12c8fe">
-        <input type="hidden" name="cc" value="greg.wilson@squarebmaintained.com">
-        <input type="hidden" name="subject" value="New Steady waitlist signup">
-        <input type="hidden" name="from_name" value="Steady waitlist">
-        <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
+      <form class="waitlist" id="join" action="https://formsubmit.co/greg.wilson@squarebmaintained.com" method="POST" novalidate>
+        <input type="hidden" name="_subject" value="New Steady waitlist signup">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
         <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required>
         <button type="submit" class="btn btn--accent">Join the waitlist</button>
       </form>
@@ -1221,12 +1220,11 @@ svg{display:block}
     <p class="eyebrow" style="justify-content:center">Find your steady</p>
     <h2>Get early access to the calmest way to manage diabetes.</h2>
     <p class="lead" style="margin-inline:auto">Join the waitlist today. Founding members get in first and help shape what Steady becomes.</p>
-    <form class="waitlist" action="https://api.web3forms.com/submit" method="POST" novalidate>
-      <input type="hidden" name="access_key" value="73f15c01-7a5a-4b83-b05d-d8efcc12c8fe">
-      <input type="hidden" name="cc" value="greg.wilson@squarebmaintained.com">
-      <input type="hidden" name="subject" value="New Steady waitlist signup">
-      <input type="hidden" name="from_name" value="Steady waitlist">
-      <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
+    <form class="waitlist" action="https://formsubmit.co/greg.wilson@squarebmaintained.com" method="POST" novalidate>
+      <input type="hidden" name="_subject" value="New Steady waitlist signup">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
       <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required>
       <button type="submit" class="btn btn--accent">Join the waitlist</button>
     </form>
@@ -1330,7 +1328,7 @@ svg{display:block}
     });
   });
 
-  /* waitlist forms -> Web3Forms (delivers to landon@ + greg.wilson@ squarebmaintained.com) */
+  /* waitlist forms -> FormSubmit.co (delivers to greg.wilson@squarebmaintained.com) */
   document.querySelectorAll('.waitlist').forEach(function(form){
     form.addEventListener('submit', function(e){
       e.preventDefault();
@@ -1348,9 +1346,10 @@ svg{display:block}
         if(!note){ note = document.createElement('div'); note.className = 'waitlist__err'; note.style.cssText = 'margin-top:.7rem;font-size:.85rem;color:#C2503B;font-weight:500'; form.insertAdjacentElement('afterend', note); }
         note.textContent = 'That didn\'t go through. Please try again in a moment.';
       };
-      fetch('https://api.web3forms.com/submit', { method:'POST', headers:{'Accept':'application/json'}, body:new FormData(form) })
+      var endpoint = form.action.replace('https://formsubmit.co/', 'https://formsubmit.co/ajax/');
+      fetch(endpoint, { method:'POST', headers:{'Accept':'application/json'}, body:new FormData(form) })
         .then(function(r){ return r.json(); })
-        .then(function(d){ (d && d.success) ? done() : fail(); })
+        .then(function(d){ var ok = d && (d.success === true || d.success === 'true'); ok ? done() : fail(); })
         .catch(fail);
     });
   });
